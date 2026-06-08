@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { setDemoUser } from "@/lib/demo-auth";
 import { cn } from "@/lib/utils";
 
 type AuthMode = "signin" | "signup" | "forgot";
@@ -131,7 +132,7 @@ export function AuthSuite() {
       setMessage(copy[mode].success);
 
       if (mode === "signin") {
-        localStorage.setItem("nimblejudge-demo-user", form.email);
+        setDemoUser(form.email);
         window.setTimeout(() => router.push("/dashboard"), 450);
       }
     } catch {

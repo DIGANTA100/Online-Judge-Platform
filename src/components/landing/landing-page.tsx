@@ -25,6 +25,8 @@ import {
   testimonials
 } from "@/lib/site-data";
 import { Button } from "@/components/ui/button";
+import { PlatformSidebar } from "@/components/platform/platform-sidebar";
+import { useDemoUser } from "@/lib/demo-auth";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
@@ -40,6 +42,7 @@ const heroMetrics = [
 export function LandingPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-ink-950 text-white">
+      <PlatformSidebar active="home" requireLogin />
       <Header />
       <Hero />
       <Stats />
@@ -54,6 +57,8 @@ export function LandingPage() {
 }
 
 function Header() {
+  const isLoggedIn = Boolean(useDemoUser());
+
   return (
     <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.06] bg-ink-950/78 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -75,14 +80,28 @@ function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Button as="a" href="https://github.com" target="_blank" rel="noreferrer" size="sm" variant="ghost">
-            <GitBranch className="h-4 w-4" aria-hidden />
-            <span className="hidden sm:inline">GitHub</span>
-          </Button>
-          <Button as="a" href="/auth" size="sm">
-            Get Started
-            <ArrowRight className="h-4 w-4" aria-hidden />
-          </Button>
+          {isLoggedIn ? (
+            <>
+              <Button as="a" href="/dashboard" size="sm" variant="secondary">
+                Dashboard
+              </Button>
+              <Button as="a" href="/problems" size="sm">
+                Problemset
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button as="a" href="https://github.com" target="_blank" rel="noreferrer" size="sm" variant="ghost">
+                <GitBranch className="h-4 w-4" aria-hidden />
+                <span className="hidden sm:inline">GitHub</span>
+              </Button>
+              <Button as="a" href="/auth" size="sm">
+                Get Started
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
@@ -90,6 +109,8 @@ function Header() {
 }
 
 function Hero() {
+  const isLoggedIn = Boolean(useDemoUser());
+
   return (
     <section className="relative min-h-[92vh] pt-28 sm:pt-32">
       <div className="absolute inset-0 bg-radial-grid bg-[length:24px_24px] opacity-[0.18]" />
@@ -122,13 +143,13 @@ function Hero() {
             and secure code execution, designed for serious builders and sharp learners.
           </motion.p>
           <motion.div className="mt-8 flex flex-col gap-3 sm:flex-row" variants={fadeUp}>
-            <Button as="a" href="/platform" size="lg">
-              Explore Platform
+            <Button as="a" href={isLoggedIn ? "/dashboard" : "/platform"} size="lg">
+              {isLoggedIn ? "Open Dashboard" : "Explore Platform"}
               <ChevronRight className="h-5 w-5" aria-hidden />
             </Button>
-            <Button as="a" href="#editor" size="lg" variant="secondary">
+            <Button as="a" href={isLoggedIn ? "/problems" : "#editor"} size="lg" variant="secondary">
               <Play className="h-5 w-5" aria-hidden />
-              View Editor
+              {isLoggedIn ? "Solve Problems" : "View Editor"}
             </Button>
           </motion.div>
         </motion.div>

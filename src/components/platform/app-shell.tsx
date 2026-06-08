@@ -1,9 +1,6 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
-import { Code2, Home } from "lucide-react";
-import { productModules } from "@/lib/platform-data";
 import { cn } from "@/lib/utils";
-import { LogoutButton } from "@/components/platform/logout-button";
+import { PlatformSidebar } from "@/components/platform/platform-sidebar";
 
 export function AppShell({
   children,
@@ -14,51 +11,8 @@ export function AppShell({
 }) {
   return (
     <main className="min-h-screen bg-ink-950 text-white">
-      <div className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-white/[0.06] bg-ink-950/90 p-4 backdrop-blur-xl lg:block">
-        <Link className="focus-ring mb-6 flex items-center gap-3 rounded-md px-2 py-2" href="/">
-          <span className="grid h-9 w-9 place-items-center rounded-md bg-premium-line text-ink-950">
-            <Code2 className="h-5 w-5" />
-          </span>
-          <span className="font-semibold">NimbleJudge</span>
-        </Link>
-        <nav className="space-y-1" aria-label="Platform modules">
-          <Link
-            className={cn(
-              "focus-ring flex items-center gap-3 rounded-md px-3 py-2 text-sm text-white/62 transition hover:bg-white/[0.06] hover:text-white",
-              active === "home" && "bg-white/[0.08] text-white"
-            )}
-            href="/"
-          >
-            <Home className="h-4 w-4" />
-            Landing
-          </Link>
-          {productModules.filter((module) => module.title !== "Architecture").map((module) => (
-            <Link
-              className={cn(
-                "focus-ring flex items-center gap-3 rounded-md px-3 py-2 text-sm text-white/62 transition hover:bg-white/[0.06] hover:text-white",
-                active === module.title && "bg-white/[0.08] text-white"
-              )}
-              href={module.href}
-              key={module.title}
-            >
-              <module.icon className="h-4 w-4" />
-              {module.title}
-            </Link>
-          ))}
-        </nav>
-        <div className="absolute bottom-4 left-4 right-4">
-          <LogoutButton />
-        </div>
-      </div>
-      <div className="lg:pl-72">
-        <div className="border-b border-white/[0.06] bg-ink-950/82 px-4 py-3 backdrop-blur-xl lg:hidden">
-          <Link className="flex items-center gap-3" href="/">
-            <span className="grid h-9 w-9 place-items-center rounded-md bg-premium-line text-ink-950">
-              <Code2 className="h-5 w-5" />
-            </span>
-            <span className="font-semibold">NimbleJudge</span>
-          </Link>
-        </div>
+      <PlatformSidebar active={active} />
+      <div>
         {children}
       </div>
     </main>

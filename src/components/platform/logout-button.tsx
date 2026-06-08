@@ -1,10 +1,11 @@
 "use client";
 
 import { LogOut } from "lucide-react";
+import { clearDemoUser } from "@/lib/demo-auth";
 
 export function LogoutButton() {
   function logout() {
-    localStorage.removeItem("nimblejudge-demo-user");
+    clearDemoUser();
     window.location.href = "/";
   }
 
