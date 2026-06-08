@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/nimblejudge
+    username: nimblejudge
+    password: nimblejudge
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+nimblejudge:
+  jwt:
+    access-token-ttl-seconds: 900
+    refresh-token-ttl-days: 30
+  judge:
+    queue-name: judge:submissions
+    docker-network-disabled: true
