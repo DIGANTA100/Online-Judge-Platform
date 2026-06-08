@@ -19,16 +19,17 @@ import {
   Terminal,
   Timer,
   Trophy,
+  User,
   Users
 } from "lucide-react";
 
 export const productModules = [
   {
-    title: "Authentication",
-    href: "/auth",
-    description: "Login, signup, password reset, email verification, JWT, refresh tokens, Google and GitHub OAuth flows.",
-    icon: KeyRound,
-    status: "UI + API contract"
+    title: "Profile",
+    href: "/profile",
+    description: "Manage your professional developer profile, track submission statistics, ratings, solved categories and configure account preferences.",
+    icon: User,
+    status: "Implemented surface"
   },
   {
     title: "Problemset",
