@@ -9,12 +9,9 @@ import {
   CheckCircle2,
   Flame,
   Globe,
-  Mail,
   Medal,
   Settings,
-  Shield,
   Trophy,
-  User,
   Zap
 } from "lucide-react";
 import { Surface, StatusPill } from "@/components/platform/app-shell";

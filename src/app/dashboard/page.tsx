@@ -3,7 +3,7 @@ import { AnalyticsSystem } from "@/components/platform/analytics-system";
 
 export default function DashboardPage() {
   return (
-    <AppShell active="Analytics">
+    <AppShell active="Dashboard">
       <PageHeader
         eyebrow="Dashboard"
         title="Your Competitive Programming Command Center"

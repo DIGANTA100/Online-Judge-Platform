@@ -1,6 +1,6 @@
 import {
-  Activity,
   Bot,
+  LayoutDashboard,
   BrainCircuit,
   CheckCircle2,
   Code2,
@@ -9,7 +9,6 @@ import {
   FileCode2,
   Gauge,
   GraduationCap,
-  KeyRound,
   LockKeyhole,
   Medal,
   MessageSquareText,
@@ -60,10 +59,10 @@ export const productModules = [
     status: "Implemented surface"
   },
   {
-    title: "Analytics",
+    title: "Dashboard",
     href: "/dashboard",
     description: "Heatmap, solved counts, language usage, accuracy, rating history, and contest performance.",
-    icon: Activity,
+    icon: LayoutDashboard,
     status: "Implemented surface"
   },
   {

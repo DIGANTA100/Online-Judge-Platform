@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { PlatformSidebar } from "@/components/platform/platform-sidebar";
+import { DashboardTopBar } from "@/components/platform/dashboard-topbar";
 
 export function AppShell({
   children,
@@ -12,6 +13,11 @@ export function AppShell({
   return (
     <main className="min-h-screen bg-ink-950 text-white">
       <PlatformSidebar active={active} />
+      {active === "Dashboard" && (
+        <div className="flex justify-end px-4 pt-4 sm:px-6 lg:px-8">
+          <DashboardTopBar />
+        </div>
+      )}
       <div>
         {children}
       </div>
