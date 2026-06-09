@@ -46,8 +46,8 @@ export const productModules = [
   },
   {
     title: "Community",
-    href: "/platform",
-    description: "Users, teams, discussions, notifications, badges, and moderation are represented across the platform surfaces.",
+    href: "/community",
+    description: "Discuss problems, share approaches, ask questions, follow announcements, and learn with other coders.",
     icon: Users,
     status: "Implemented surface"
   },
