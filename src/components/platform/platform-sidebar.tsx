@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Code2, Home, Menu, X } from "lucide-react";
 import { productModules } from "@/lib/platform-data";
-import { useDemoUser } from "@/lib/demo-auth";
+import { useDemoRole, useDemoUser } from "@/lib/demo-auth";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/platform/logout-button";
 
@@ -12,7 +12,7 @@ const hiddenSidebarItems = new Set([
   "Architecture",
   "Contest Engine",
   "Judge Workspace",
-  "Admin Studio"
+  "Rating System"
 ]);
 
 export function PlatformSidebar({
@@ -24,11 +24,16 @@ export function PlatformSidebar({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const demoUser = useDemoUser();
+  const demoRole = useDemoRole();
   const isLoggedIn = !requireLogin || Boolean(demoUser);
 
   if (!isLoggedIn) return null;
 
-  const visibleModules = productModules.filter((module) => !hiddenSidebarItems.has(module.title));
+  const visibleModules = productModules.filter((module) => {
+    if (hiddenSidebarItems.has(module.title)) return false;
+    if (module.title === "Admin Studio") return demoRole === "ADMIN";
+    return true;
+  });
 
   return (
     <>

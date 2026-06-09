@@ -22,16 +22,19 @@ import { setDemoUser } from "@/lib/demo-auth";
 import { cn } from "@/lib/utils";
 
 type AuthMode = "signin" | "signup" | "forgot";
+type AccountType = "user" | "admin";
 type FormState = {
   handle: string;
   email: string;
   password: string;
+  secretCode: string;
 };
 
 const emptyState: FormState = {
   handle: "",
   email: "",
-  password: ""
+  password: "",
+  secretCode: ""
 };
 
 const copy = {
@@ -64,6 +67,7 @@ const arenaSignals = [
 
 export function AuthSuite() {
   const router = useRouter();
+  const [accountType, setAccountType] = useState<AccountType>("user");
   const [mode, setMode] = useState<AuthMode>("signin");
   const [form, setForm] = useState<FormState>(emptyState);
   const [showPassword, setShowPassword] = useState(false);
@@ -95,6 +99,16 @@ export function AuthSuite() {
       return;
     }
 
+    if (accountType === "admin" && mode === "forgot") {
+      setError("Admin password recovery should be handled by the platform owner.");
+      return;
+    }
+
+    if (accountType === "admin" && mode === "signup" && form.secretCode !== "153723") {
+      setError("Enter the correct admin secret code.");
+      return;
+    }
+
     if (mode !== "forgot" && form.password.length < 8) {
       setError("Password must be at least 8 characters.");
       return;
@@ -103,18 +117,27 @@ export function AuthSuite() {
     setIsSubmitting(true);
 
     const endpoint =
-      mode === "signin"
-        ? "/api/v1/auth/login"
-        : mode === "signup"
-          ? "/api/v1/auth/signup"
-          : "/api/v1/auth/forgot-password";
+      accountType === "admin"
+        ? mode === "signin"
+          ? "/api/v1/auth/admin-login"
+          : "/api/v1/auth/admin-signup"
+        : mode === "signin"
+          ? "/api/v1/auth/login"
+          : mode === "signup"
+            ? "/api/v1/auth/signup"
+            : "/api/v1/auth/forgot-password";
 
     const payload =
       mode === "forgot"
         ? { email: form.email }
         : mode === "signin"
           ? { email: form.email, password: form.password }
-          : { handle: form.handle, email: form.email, password: form.password };
+          : {
+              handle: form.handle,
+              email: form.email,
+              password: form.password,
+              secretCode: form.secretCode
+            };
 
     try {
       const response = await fetch(endpoint, {
@@ -122,7 +145,7 @@ export function AuthSuite() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-      const data = (await response.json()) as { error?: string };
+      const data = (await response.json()) as { error?: string; user?: { role?: "USER" | "ADMIN" } };
 
       if (!response.ok) {
         setError(data.error ?? "Something went wrong. Please try again.");
@@ -132,8 +155,9 @@ export function AuthSuite() {
       setMessage(copy[mode].success);
 
       if (mode === "signin") {
-        setDemoUser(form.email);
-        window.setTimeout(() => router.push("/dashboard"), 450);
+        const role = data.user?.role === "ADMIN" ? "ADMIN" : "USER";
+        setDemoUser(form.email, role);
+        window.setTimeout(() => router.push(role === "ADMIN" ? "/admin" : "/dashboard"), 450);
       }
     } catch {
       setError("Could not reach the auth service. Please try again.");
@@ -180,8 +204,8 @@ export function AuthSuite() {
                   Practice, compete, and improve from one polished workspace.
                 </h1>
                 <p className="mt-5 text-lg leading-8 text-white/62">
-                  Your account connects problem solving, contest history, ratings,
-                  submissions, editor preferences, and learning analytics.
+                  Your account connects problem solving, contest history, submissions,
+                  editor preferences, and learning analytics.
                 </p>
                 <div className="mt-8 grid grid-cols-2 gap-4">
                   {arenaSignals.map((signal) => (
@@ -198,12 +222,36 @@ export function AuthSuite() {
             </div>
 
             <div className="rounded-md border border-white/10 bg-white/[0.07] p-5 shadow-panel backdrop-blur-xl sm:p-7">
+              <div className="mb-4 grid grid-cols-2 rounded-md border border-white/10 bg-ink-900 p-1">
+                {[
+                  ["user", "User"],
+                  ["admin", "Admin"]
+                ].map(([key, label]) => (
+                  <button
+                    className={cn(
+                      "focus-ring h-10 rounded-md text-sm font-semibold text-white/56 transition",
+                      accountType === key && "bg-mint-300 text-ink-950"
+                    )}
+                    key={key}
+                    onClick={() => {
+                      setAccountType(key as AccountType);
+                      setMode("signin");
+                      setError(null);
+                      setMessage(null);
+                    }}
+                    type="button"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
               <div className="grid grid-cols-3 rounded-md border border-white/10 bg-ink-900 p-1">
                 {[
                   ["signin", "Sign in"],
                   ["signup", "Sign up"],
                   ["forgot", "Reset"]
-                ].map(([key, label]) => (
+                ].filter(([key]) => !(accountType === "admin" && key === "forgot")).map(([key, label]) => (
                   <button
                     className={cn(
                       "focus-ring h-10 rounded-md text-sm font-semibold text-white/56 transition",
@@ -233,6 +281,19 @@ export function AuthSuite() {
                       onChange={(event) => setForm((current) => ({ ...current, handle: event.target.value }))}
                       placeholder="tourist_mode"
                       value={form.handle}
+                    />
+                  </label>
+                )}
+
+                {accountType === "admin" && mode === "signup" && (
+                  <label className="grid gap-2 text-sm font-medium text-white/68">
+                    Admin secret code
+                    <input
+                      autoComplete="off"
+                      className="focus-ring h-12 rounded-md border border-white/10 bg-ink-900 px-3 text-white placeholder:text-white/28"
+                      onChange={(event) => setForm((current) => ({ ...current, secretCode: event.target.value }))}
+                      placeholder="Enter secret code"
+                      value={form.secretCode}
                     />
                   </label>
                 )}
@@ -332,14 +393,18 @@ export function AuthSuite() {
               <div className="mt-6 text-center text-sm text-white/52">
                 {mode === "signin" && (
                   <>
-                    New here?{" "}
+                    {accountType === "admin" ? "Need admin access?" : "New here?"}{" "}
                     <button className="text-mint-300 hover:text-mint-200" onClick={() => switchMode("signup")} type="button">
-                      Create an account
+                      {accountType === "admin" ? "Create admin account" : "Create an account"}
                     </button>
-                    <span className="mx-2 text-white/24">|</span>
-                    <button className="text-mint-300 hover:text-mint-200" onClick={() => switchMode("forgot")} type="button">
-                      Forgot password?
-                    </button>
+                    {accountType === "user" && (
+                      <>
+                        <span className="mx-2 text-white/24">|</span>
+                        <button className="text-mint-300 hover:text-mint-200" onClick={() => switchMode("forgot")} type="button">
+                          Forgot password?
+                        </button>
+                      </>
+                    )}
                   </>
                 )}
                 {mode === "signup" && (

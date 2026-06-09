@@ -28,6 +28,30 @@ public class AuthController {
     return new AuthResponse("demo.jwt.access.token", "demo-refresh-token", 900, request.email());
   }
 
+  @PostMapping("/admin-login")
+  public AuthResponse adminLogin(@Valid @RequestBody LoginRequest request) {
+    // DATABASE TODO:
+    // Replace this demo check with admin lookup, password-hash verification,
+    // role check, refresh-token rotation, and audit logging.
+    if (!request.email().equals("admin123@gmail.com") || !request.password().equals("admin123")) {
+      throw new InvalidCredentialsException();
+    }
+
+    return new AuthResponse("demo.admin.jwt.access.token", "demo-admin-refresh-token", 900, request.email());
+  }
+
+  @PostMapping("/admin-signup")
+  @ResponseStatus(HttpStatus.CREATED)
+  public AuthResponse adminSignup(@Valid @RequestBody AdminSignupRequest request) {
+    // DATABASE TODO:
+    // Hash password, create ADMIN user, store audit log, and optionally require email verification.
+    if (!request.secretCode().equals("153723")) {
+      throw new InvalidAdminSecretException();
+    }
+
+    return new AuthResponse("demo.admin.jwt.access.token", "demo-admin-refresh-token", 900, request.email());
+  }
+
   @PostMapping("/forgot-password")
   public PasswordResetResponse forgotPassword(@Valid @RequestBody PasswordResetRequest request) {
     return new PasswordResetResponse(
@@ -45,6 +69,13 @@ public class AuthController {
   public record LoginRequest(
     @Email @NotBlank String email,
     @NotBlank String password
+  ) {}
+
+  public record AdminSignupRequest(
+    @NotBlank String handle,
+    @Email @NotBlank String email,
+    @NotBlank String password,
+    @NotBlank String secretCode
   ) {}
 
   public record PasswordResetRequest(

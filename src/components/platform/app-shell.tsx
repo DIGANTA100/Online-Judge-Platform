@@ -12,7 +12,7 @@ export function AppShell({
 }) {
   return (
     <main className="min-h-screen bg-ink-950 text-white">
-      <PlatformSidebar active={active} />
+      <PlatformSidebar active={active} requireLogin />
       {active === "Dashboard" && (
         <div className="flex justify-end px-4 pt-4 sm:px-6 lg:px-8">
           <DashboardTopBar />
