@@ -25,6 +25,34 @@ public class AdminController {
     );
   }
 
+  @GetMapping("/dashboard")
+  public AdminDashboardResponse dashboard() {
+    // AUTH TODO:
+    // Require ADMIN session/JWT before returning platform-wide operational data.
+    // DATABASE TODO:
+    // Replace these demo values with aggregate queries from users, submissions,
+    // reports, discussions, problems, and judge_jobs tables.
+    return new AdminDashboardResponse("18420", "1284", "7", "18", "1.8s");
+  }
+
+  @GetMapping("/announcements")
+  public List<AdminAnnouncementResponse> listAnnouncements() {
+    // DATABASE TODO:
+    // Read announcement drafts/published messages from PostgreSQL.
+    return List.of(
+      new AdminAnnouncementResponse("ann_demo_001", "Problemset maintenance", "ALL_USERS", "DRAFT"),
+      new AdminAnnouncementResponse("ann_demo_002", "New editorial release", "PRACTICE_USERS", "QUEUED")
+    );
+  }
+
+  @PostMapping("/announcements")
+  @ResponseStatus(HttpStatus.CREATED)
+  public AdminMutationResponse createAnnouncement(@Valid @RequestBody CreateAnnouncementRequest request) {
+    // DATABASE TODO:
+    // Insert announcement with created_by admin id and write audit_logs row.
+    return new AdminMutationResponse(true, "ann_demo_created");
+  }
+
   @PatchMapping("/users")
   public AdminMutationResponse updateUser(@Valid @RequestBody UpdateUserRequest request) {
     // DATABASE TODO:
@@ -47,6 +75,27 @@ public class AdminController {
     String email,
     String role,
     String status
+  ) {}
+
+  public record AdminDashboardResponse(
+    String activeUsers,
+    String queuedSubmissions,
+    String openReports,
+    String draftProblems,
+    String averageQueueTime
+  ) {}
+
+  public record AdminAnnouncementResponse(
+    String id,
+    String title,
+    String audience,
+    String status
+  ) {}
+
+  public record CreateAnnouncementRequest(
+    @NotBlank String title,
+    @NotBlank String body,
+    String audience
   ) {}
 
   public record UpdateUserRequest(

@@ -1,5 +1,6 @@
 import { AppShell, PageHeader } from "@/components/platform/app-shell";
 import { RatingSystem } from "@/components/platform/rating-system";
+import { UserOnlyGate } from "@/components/platform/user-only-gate";
 
 export default function RatingsPage() {
   return (
@@ -9,9 +10,11 @@ export default function RatingsPage() {
         title="Codeforces-Like Rating System"
         description="Rating changes, rank titles, expected rank calculation, performance estimation, volatility damping, and contest history modeling."
       />
-      <div className="px-4 py-8 sm:px-6 lg:px-8">
-        <RatingSystem />
-      </div>
+      <UserOnlyGate>
+        <div className="px-4 py-8 sm:px-6 lg:px-8">
+          <RatingSystem />
+        </div>
+      </UserOnlyGate>
     </AppShell>
   );
 }

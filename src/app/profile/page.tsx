@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { AppShell, PageHeader } from "@/components/platform/app-shell";
 import { ProfileSystem } from "@/components/platform/profile-system";
+import { UserOnlyGate } from "@/components/platform/user-only-gate";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -32,9 +33,11 @@ export default function ProfilePage() {
         title="Developer Profile"
         description="Manage your professional developer profile, track solved statistics, view contest ratings, and customize system settings."
       />
-      <div className="px-4 py-8 sm:px-6 lg:px-8">
-        <ProfileSystem />
-      </div>
+      <UserOnlyGate>
+        <div className="px-4 py-8 sm:px-6 lg:px-8">
+          <ProfileSystem />
+        </div>
+      </UserOnlyGate>
     </AppShell>
   );
 }

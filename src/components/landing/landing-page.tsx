@@ -26,7 +26,7 @@ import {
 } from "@/lib/site-data";
 import { Button } from "@/components/ui/button";
 import { PlatformSidebar } from "@/components/platform/platform-sidebar";
-import { useDemoUser } from "@/lib/demo-auth";
+import { useDemoRole, useDemoUser } from "@/lib/demo-auth";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
@@ -58,6 +58,7 @@ export function LandingPage() {
 
 function Header() {
   const isLoggedIn = Boolean(useDemoUser());
+  const isAdmin = useDemoRole() === "ADMIN";
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.06] bg-ink-950/78 backdrop-blur-xl">
@@ -83,10 +84,10 @@ function Header() {
           {isLoggedIn ? (
             <>
               <Button as="a" href="/dashboard" size="sm" variant="secondary">
-                Dashboard
+                {isAdmin ? "Admin Dashboard" : "Dashboard"}
               </Button>
-              <Button as="a" href="/problems" size="sm">
-                Problemset
+              <Button as="a" href={isAdmin ? "/admin/profile" : "/problems"} size="sm">
+                {isAdmin ? "Admin Profile" : "Problemset"}
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </Button>
             </>
@@ -110,6 +111,7 @@ function Header() {
 
 function Hero() {
   const isLoggedIn = Boolean(useDemoUser());
+  const isAdmin = useDemoRole() === "ADMIN";
 
   return (
     <section className="relative min-h-[92vh] pt-28 sm:pt-32">
@@ -144,12 +146,12 @@ function Hero() {
           </motion.p>
           <motion.div className="mt-8 flex flex-col gap-3 sm:flex-row" variants={fadeUp}>
             <Button as="a" href={isLoggedIn ? "/dashboard" : "/platform"} size="lg">
-              {isLoggedIn ? "Open Dashboard" : "Explore Platform"}
+              {isLoggedIn ? (isAdmin ? "Open Admin Dashboard" : "Open Dashboard") : "Explore Platform"}
               <ChevronRight className="h-5 w-5" aria-hidden />
             </Button>
-            <Button as="a" href={isLoggedIn ? "/problems" : "#editor"} size="lg" variant="secondary">
+            <Button as="a" href={isLoggedIn ? (isAdmin ? "/admin" : "/problems") : "#editor"} size="lg" variant="secondary">
               <Play className="h-5 w-5" aria-hidden />
-              {isLoggedIn ? "Solve Problems" : "View Editor"}
+              {isLoggedIn ? (isAdmin ? "Manage Platform" : "Solve Problems") : "View Editor"}
             </Button>
           </motion.div>
         </motion.div>

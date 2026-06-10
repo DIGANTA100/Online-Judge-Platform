@@ -1,15 +1,18 @@
 "use client";
 
 import {
+  Activity,
   Ban,
   CheckCircle2,
   FileCode2,
   Flag,
   LockKeyhole,
+  Megaphone,
   Plus,
   Save,
   Search,
   ShieldCheck,
+  TrendingUp,
   UserCheck,
   Users
 } from "lucide-react";
@@ -17,10 +20,10 @@ import { Surface, StatusPill } from "@/components/platform/app-shell";
 import { Button } from "@/components/ui/button";
 
 const adminMetrics = [
-  { label: "Users", value: "312K", icon: Users },
-  { label: "Pending reports", value: "7", icon: Flag },
-  { label: "Draft problems", value: "18", icon: FileCode2 },
-  { label: "Hidden tests", value: "642", icon: LockKeyhole }
+  { label: "Active users", value: "18,420", detail: "+9.8% today", icon: Users },
+  { label: "Queued submissions", value: "1,284", detail: "live judge traffic", icon: Activity },
+  { label: "Open reports", value: "7", detail: "needs review", icon: Flag },
+  { label: "Draft problems", value: "18", detail: "publisher queue", icon: FileCode2 }
 ];
 
 const managedUsers = [
@@ -42,6 +45,13 @@ const moderationQueue = [
   { item: "Incorrect sample report on Graph Relay", type: "Problem", severity: "Low" }
 ];
 
+const platformSignals = [
+  { label: "Accepted submissions", value: "74.2%", trend: "healthy" },
+  { label: "Average queue time", value: "1.8s", trend: "stable" },
+  { label: "New discussions", value: "326", trend: "rising" },
+  { label: "Problem reports closed", value: "91%", trend: "strong" }
+];
+
 export function AdminSystem() {
   return (
     <div className="grid gap-6">
@@ -53,11 +63,11 @@ export function AdminSystem() {
               Admin Control Center
             </div>
             <h1 className="mt-5 text-balance text-4xl font-semibold leading-tight sm:text-5xl">
-              Manage users, problems, moderation, and platform quality.
+              Govern users, submissions, reports, publishing, and platform health.
             </h1>
             <p className="mt-4 max-w-3xl text-lg leading-8 text-white/62">
-              Review flagged activity, publish problemset content, monitor reports,
-              and keep the competitive environment clean and reliable.
+              Review live activity, publish problem content, resolve reports,
+              send announcements, and keep the online judge reliable for normal users.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -80,12 +90,26 @@ export function AdminSystem() {
               <div>
                 <div className="text-sm text-white/50">{metric.label}</div>
                 <div className="mt-3 font-mono text-3xl font-semibold">{metric.value}</div>
+                <div className="mt-2 text-xs text-white/38">{metric.detail}</div>
               </div>
               <span className="grid h-11 w-11 place-items-center rounded-md bg-mint-300/10 text-mint-300">
                 <metric.icon className="h-5 w-5" />
               </span>
             </div>
           </Surface>
+        ))}
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-4">
+        {platformSignals.map((signal) => (
+          <div className="rounded-md border border-white/10 bg-ink-900 p-4" key={signal.label}>
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-sm text-white/46">{signal.label}</div>
+              <TrendingUp className="h-4 w-4 text-mint-300" />
+            </div>
+            <div className="mt-3 font-mono text-2xl font-semibold">{signal.value}</div>
+            <div className="mt-2 text-xs uppercase tracking-normal text-mint-300">{signal.trend}</div>
+          </div>
         ))}
       </div>
 
@@ -127,7 +151,13 @@ export function AdminSystem() {
         </Surface>
 
         <Surface>
-          <h2 className="text-2xl font-semibold">Problem publisher</h2>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-semibold">Problem publisher</h2>
+              <p className="mt-2 text-white/54">Prepare statements, limits, samples, and review status before release.</p>
+            </div>
+            <LockKeyhole className="h-5 w-5 text-mint-300" />
+          </div>
           <div className="mt-5 grid gap-3">
             <input className="focus-ring h-11 rounded-md border border-white/10 bg-ink-900 px-3 text-sm text-white placeholder:text-white/30" placeholder="Problem title" />
             <select className="focus-ring h-11 rounded-md border border-white/10 bg-ink-900 px-3 text-sm text-white">
@@ -140,7 +170,7 @@ export function AdminSystem() {
             <textarea className="focus-ring min-h-24 rounded-md border border-white/10 bg-ink-900 p-3 font-mono text-sm leading-6 text-white placeholder:text-white/30" placeholder="Sample input / output" />
             <Button>
               <Save className="h-4 w-4" />
-              Save Problem
+              Save Draft
             </Button>
           </div>
         </Surface>
@@ -162,7 +192,10 @@ export function AdminSystem() {
         </Surface>
 
         <Surface>
-          <h2 className="text-2xl font-semibold">Moderation queue</h2>
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-semibold">Moderation queue</h2>
+            <Megaphone className="h-5 w-5 text-mint-300" />
+          </div>
           <div className="mt-5 space-y-3">
             {moderationQueue.map((item) => (
               <div className="rounded-md border border-white/10 bg-ink-900 p-4" key={item.item}>

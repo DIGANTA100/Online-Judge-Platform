@@ -1,7 +1,6 @@
 import {
   Activity,
   BadgeCheck,
-  Bell,
   CalendarClock,
   KeyRound,
   LockKeyhole,
@@ -109,7 +108,7 @@ export function AdminProfileSystem() {
               <p className="mt-2 text-white/54">Admin-only session and account controls.</p>
             </div>
             <span className="grid h-11 w-11 place-items-center rounded-md bg-mint-300/10 text-mint-300">
-              <Bell className="h-5 w-5" />
+              <KeyRound className="h-5 w-5" />
             </span>
           </div>
 
