@@ -15,6 +15,8 @@ const hiddenSidebarItems = new Set([
   "Rating System"
 ]);
 
+const adminHiddenSidebarItems = new Set(["Problemset", "AI Learning"]);
+
 export function PlatformSidebar({
   active,
   requireLogin = false
@@ -31,6 +33,7 @@ export function PlatformSidebar({
 
   const visibleModules = productModules.filter((module) => {
     if (hiddenSidebarItems.has(module.title)) return false;
+    if (demoRole === "ADMIN" && adminHiddenSidebarItems.has(module.title)) return false;
     if (module.title === "Admin Studio") return demoRole === "ADMIN";
     return true;
   });
@@ -80,20 +83,26 @@ export function PlatformSidebar({
             <Home className="h-4 w-4" />
             Landing
           </Link>
-          {visibleModules.map((module) => (
-            <Link
-              className={cn(
-                "focus-ring flex items-center gap-3 rounded-md px-3 py-2 text-sm text-white/62 transition hover:bg-white/[0.06] hover:text-white",
-                active === module.title && "bg-white/[0.08] text-white"
-              )}
-              href={module.href}
-              key={module.title}
-              onClick={() => setIsOpen(false)}
-            >
-              <module.icon className="h-4 w-4" />
-              {module.title}
-            </Link>
-          ))}
+          {visibleModules.map((module) => {
+            const isAdminProfile = demoRole === "ADMIN" && module.title === "Profile";
+            const title = isAdminProfile ? "Admin Profile" : module.title;
+            const href = isAdminProfile ? "/admin/profile" : module.href;
+
+            return (
+              <Link
+                className={cn(
+                  "focus-ring flex items-center gap-3 rounded-md px-3 py-2 text-sm text-white/62 transition hover:bg-white/[0.06] hover:text-white",
+                  active === title && "bg-white/[0.08] text-white"
+                )}
+                href={href}
+                key={`${module.title}-${title}`}
+                onClick={() => setIsOpen(false)}
+              >
+                <module.icon className="h-4 w-4" />
+                {title}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="mt-auto pt-4">
