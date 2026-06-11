@@ -1,7 +1,7 @@
 "use client";
 
 import { AnalyticsSystem } from "@/components/platform/analytics-system";
-import { AdminSystem } from "@/components/platform/admin-system";
+import { AdminDashboardSystem } from "@/components/platform/admin-dashboard-system";
 import { useDemoRole, useDemoUser } from "@/lib/demo-auth";
 
 function DashboardHeader({
@@ -43,10 +43,10 @@ export function DashboardExperience() {
         <DashboardHeader
           eyebrow="Admin dashboard"
           title="Platform Operations Center"
-          description="Monitor user activity, submissions, reports, content publishing, announcements, and system quality from one admin workspace."
+          description="Monitor user activity, submissions, reports, announcements, operational health, and platform risk from one admin workspace."
         />
         <div className="px-4 py-8 sm:px-6 lg:px-8">
-          <AdminSystem />
+          <AdminDashboardSystem />
         </div>
       </>
     );
