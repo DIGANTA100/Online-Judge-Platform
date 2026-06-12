@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Surface, StatusPill } from "@/components/platform/app-shell";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const adminMetrics = [
   { label: "Active users", value: "18,420", detail: "+9.8% today", icon: Users },
@@ -71,6 +72,10 @@ export function AdminSystem() {
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
+            <Button as={Link} href="/admin/community" variant="secondary" className="border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200">
+              <Users className="h-4 w-4 mr-1.5" />
+              Community Control Center
+            </Button>
             <Button>
               <Plus className="h-4 w-4" />
               New Problem
@@ -193,8 +198,16 @@ export function AdminSystem() {
 
         <Surface>
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold">Moderation queue</h2>
-            <Megaphone className="h-5 w-5 text-mint-300" />
+            <div>
+              <h2 className="text-2xl font-semibold">Moderation queue</h2>
+              <p className="mt-1 text-xs text-white/42">Recent platform flags</p>
+            </div>
+            <Link 
+              href="/admin/community" 
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-300 transition hover:bg-emerald-500/20"
+            >
+              Go to Control Center
+            </Link>
           </div>
           <div className="mt-5 space-y-3">
             {moderationQueue.map((item) => (
